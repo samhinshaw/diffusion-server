@@ -1,0 +1,23 @@
+{
+  "name": "diffusion-server",
+  "version": "1.0.0",
+  "description": "accept diffusion jobs, track their progress, and view results",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild ui/index.html --bundle --outfile=out.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samhinshaw/diffusion-server.git"
+  },
+  "author": "Sam Hinshaw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samhinshaw/diffusion-server/issues"
+  },
+  "homepage": "https://github.com/samhinshaw/diffusion-server#readme",
+  "dependencies": {
+    "esbuild": "^0.15.7"
+  }
+}

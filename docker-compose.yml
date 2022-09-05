@@ -1,0 +1,36 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.10-management-alpine
+    container_name: diffusion_rabbitmq
+    hostname: diffusion_rabbitmq
+    expose:
+      - 5672
+    ports:
+      - 15672:15672
+    # volumes:
+    #   - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['python', 'server/app.py']
+    # command: ['tail', '-f', '/dev/null'] # debug command to keep container alive
+    container_name: diffusion_server
+    ports:
+      - 9022:9022
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+  # worker:
+  #   image: myapp
+  #   command: celery -A myapp worker -l info
+  #   depends_on:
+  #     - rabbitmq
+  # gpu:
+  #   image: nvidia/cuda:11.7.1-base-ubuntu22.04
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - capabilities: [gpu]
