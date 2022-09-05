@@ -13,7 +13,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ['python', 'server/app.py']
+    image: diffusion_server
+    # command: ['python', 'app.py'] # dev mode
+    command: ['flask', 'run', '--host=0.0.0.0', '--port=9022', '--with-threads']
     # command: ['tail', '-f', '/dev/null'] # debug command to keep container alive
     container_name: diffusion_server
     ports:
@@ -22,6 +24,27 @@ services:
       - .:/app
     depends_on:
       - rabbitmq
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: diffusion_server
+    # command: ['python', 'app.py']
+    command: ['celery', '--app=tasks', 'worker', '--loglevel=info']
+    # command: ['tail', '-f', '/dev/null'] # debug command to keep container alive
+    container_name: diffusion_worker
+    depends_on:
+      - rabbitmq
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: diffusion_server
+    command: ['celery', '--app=tasks', 'beat', '--loglevel=info']
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app
   # worker:
   #   image: myapp
   #   command: celery -A myapp worker -l info
